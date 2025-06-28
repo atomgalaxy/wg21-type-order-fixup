@@ -538,7 +538,57 @@ way.</p>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">constexpr</span> value_type <span class="kw">operator</span><span class="op">()()</span> <span class="kw">const</span> <span class="kw">noexcept</span> <span class="op">{</span> <span class="cf">return</span> value; <span class="op">}</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span>;</span></code></pre></div>
 <h1 data-number="3" id="proposal"><span class="header-section-number">3</span> Proposal<a href="#proposal" class="self-link"></a></h1>
-<p>In [compare.type], replace:</p>
+<p>In [compare.type], strike paragraph 2, and fill out the code snippet
+in paragraph 1:</p>
+<blockquote>
+<p><span class="marginalizedparent"><a class="marginalized">1</a></span>
+There is an implementation-defined total ordering of all types. For any
+(possibly incomplete) types
+<code class="sourceCode cpp"><em>X</em></code> and
+<code class="sourceCode cpp"><em>Y</em></code>, the expression <code class="sourceCode cpp"><em>TYPE-ORDER</em><span class="op">(</span><em>X</em>, <em>Y</em><span class="op">)</span></code>
+is a constant expression (<a href="https://wg21.link/expr.const">[expr.const]</a>) of type
+<code class="sourceCode cpp">strong_ordering</code> (<a href="https://wg21.link/cmp.strongord">[cmp.strongord]</a>). Its value
+is <code class="sourceCode cpp">strong_ordering<span class="op">::</span>less</code>
+if <code class="sourceCode cpp"><em>X</em></code> precedes
+<code class="sourceCode cpp"><em>Y</em></code> in this
+implementation-defined total order, <code class="sourceCode cpp">strong_ordering<span class="op">::</span>greater</code>
+if <code class="sourceCode cpp"><em>Y</em></code> precedes
+<code class="sourceCode cpp"><em>X</em></code>, and <code class="sourceCode cpp">strong_ordering<span class="op">::</span>equal</code>
+if they are the same type.</p>
+<p>[Note 1:
+<code class="sourceCode cpp"><span class="dt">int</span></code>, <code class="sourceCode cpp"><span class="kw">const</span> <span class="dt">int</span></code>
+and <code class="sourceCode cpp"><span class="dt">int</span><span class="op">&amp;</span></code>
+are different types. – end note]</p>
+<p>[Note 2: This ordering need not be consistent with the one induced by
+<code class="sourceCode cpp">type_info<span class="op">::</span>before</code>.
+– end note]</p>
+<p>[Note 3: The ordering of TU-local types from different translation
+units is not observable, because the necessary specialization of
+<code class="sourceCode cpp">type_order</code> is impossible to name. –
+end note]</p>
+</blockquote>
+<div class="rm" style="color: #bf0303">
+
+<blockquote>
+<div class="sourceCode" id="cb3"><pre class="sourceCode default cpp"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>template &lt;class T, class U&gt;</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>struct type_order;</span></code></pre></div>
+</blockquote>
+
+</div>
+<div class="add" style="color: #006e28">
+
+<blockquote>
+<div class="sourceCode" id="cb4"><pre class="sourceCode default cpp"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>template&lt;class T, class U&gt; struct type_order {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  static constexpr strong_ordering value = TYPE-ORDER(T, U);</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  using value_type = strong_ordering;</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  constexpr operator value_type() const noexcept { return value; }</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  constexpr value_type operator()() const noexcept { return value; }</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>};</span></code></pre></div>
+</blockquote>
+
+</div>
 <div class="rm" style="color: #bf0303">
 
 <blockquote>
@@ -549,36 +599,18 @@ characteristic of <code class="sourceCode default">integral_constant&lt;strong_o
 </blockquote>
 
 </div>
-<p>with</p>
-<div class="add" style="color: #006e28">
-
-<blockquote>
-<p><span class="marginalizedparent"><a class="marginalized">2</a></span>
-The name <code class="sourceCode default">type_order</code> denotes the
-following class template</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode default cpp"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>template&lt;class T, class U&gt; struct type_order {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  static constexpr strong_ordering value = TYPE-ORDER(T, U);</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  using value_type = strong_ordering;</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  constexpr operator value_type() const noexcept { return value; }</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  constexpr value_type operator()() const noexcept { return value; }</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>};</span></code></pre></div>
-</blockquote>
-
-</div>
 <h1 data-number="4" id="notes"><span class="header-section-number">4</span> Notes<a href="#notes" class="self-link"></a></h1>
 <p>As of the time of this writing, <code class="sourceCode cpp">libstdc<span class="op">++</span><span class="ch">&#39;s</span></code>
 trunk implementation is as follows:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">template</span><span class="op">&lt;</span><span class="kw">typename</span> _Tp, <span class="kw">typename</span> _Up<span class="op">&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> type_order</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">static</span> <span class="kw">constexpr</span> strong_ordering value <span class="op">=</span> <span class="fu">__builtin_type_order</span><span class="op">(</span>_Tp, _Up<span class="op">)</span>;</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">using</span> value_type <span class="op">=</span> strong_ordering;</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>      <span class="kw">using</span> type <span class="op">=</span> type_order<span class="op">&lt;</span>_Tp, _Up<span class="op">&gt;</span>;</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>      <span class="kw">constexpr</span> <span class="kw">operator</span> value_type<span class="op">()</span> <span class="kw">const</span> <span class="kw">noexcept</span> <span class="op">{</span> <span class="cf">return</span> value; <span class="op">}</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="kw">constexpr</span> value_type <span class="kw">operator</span><span class="op">()()</span> <span class="kw">const</span> <span class="kw">noexcept</span> <span class="op">{</span> <span class="cf">return</span> value; <span class="op">}</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span>;</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>  <span class="kw">template</span><span class="op">&lt;</span><span class="kw">typename</span> _Tp, <span class="kw">typename</span> _Up<span class="op">&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">struct</span> type_order</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">static</span> <span class="kw">constexpr</span> strong_ordering value <span class="op">=</span> <span class="fu">__builtin_type_order</span><span class="op">(</span>_Tp, _Up<span class="op">)</span>;</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">using</span> value_type <span class="op">=</span> strong_ordering;</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>      <span class="kw">using</span> type <span class="op">=</span> type_order<span class="op">&lt;</span>_Tp, _Up<span class="op">&gt;</span>;</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      <span class="kw">constexpr</span> <span class="kw">operator</span> value_type<span class="op">()</span> <span class="kw">const</span> <span class="kw">noexcept</span> <span class="op">{</span> <span class="cf">return</span> value; <span class="op">}</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      <span class="kw">constexpr</span> value_type <span class="kw">operator</span><span class="op">()()</span> <span class="kw">const</span> <span class="kw">noexcept</span> <span class="op">{</span> <span class="cf">return</span> value; <span class="op">}</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span>;</span></code></pre></div>
 <p>Note that it has <code class="sourceCode cpp">type</code>.</p>
 <h1 data-number="5" id="acknowledgements"><span class="header-section-number">5</span> Acknowledgements<a href="#acknowledgements" class="self-link"></a></h1>
 <p>The author would like to thank the following people for their

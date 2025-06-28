@@ -78,20 +78,36 @@ template<class T, class U> struct type_order {
 
 # Proposal
 
-In [compare.type], replace:
+In [compare.type], strike paragraph 2, and fill out the code snippet in paragraph 1:
+
+> [1]{.pnum} There is an implementation-defined total ordering of all types.
+> For any (possibly incomplete) types `@_X_@` and `@_Y_@`,
+> the expression `@_TYPE-ORDER_@(@_X_@, @_Y_@)` is a constant expression ([expr.const]{.sref})
+> of type `strong_ordering` ([cmp.strongord]{.sref}).
+> Its value is `strong_ordering::less` if `@_X_@` precedes `@_Y_@` in this
+> implementation-defined total order, `strong_ordering::greater` if `@_Y_@` precedes `@_X_@`,
+> and `strong_ordering::equal` if they are the same type.
+> 
+> [Note 1: `int`, `const int` and `int&` are different types. -- end note]
+>
+> [Note 2: This ordering need not be consistent with the one induced by `type_info::before`. -- end note]
+>
+> [Note 3: The ordering of TU-local types from different translation units is
+> not observable, because the necessary specialization of `type_order` is impossible to name.
+> -- end note]
+> 
 
 ::: rm
 
-> [2]{.pnum} The name `type_order` denotes a _Cpp17BinaryTypeTrait_ ([meta.rqmts]{.sref})
-> with a base characteristic of `integral_constant<strong_ordering, @_TYPE-ORDER_@(@_X_@, @_Y_@)>`.
+> ```cpp
+> template <class T, class U>
+> struct type_order;
+> ```
 
 :::
 
-with
-
 ::: add
 
-> [2]{.pnum} The name `type_order` denotes the following class template
 >
 >   ```cpp
 >   template<class T, class U> struct type_order {
@@ -104,6 +120,13 @@ with
 >   };
 >   ```
 >
+
+:::
+
+::: rm
+
+> [2]{.pnum} The name `type_order` denotes a _Cpp17BinaryTypeTrait_ ([meta.rqmts]{.sref})
+> with a base characteristic of `integral_constant<strong_ordering, @_TYPE-ORDER_@(@_X_@, @_Y_@)>`.
 
 :::
 
