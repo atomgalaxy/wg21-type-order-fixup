@@ -557,9 +557,9 @@ characteristic of <code class="sourceCode default">integral_constant&lt;strong_o
 The name <code class="sourceCode default">type_order</code> denotes the
 following class template</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode default cpp"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>template&lt;class T, class U&gt; struct type_order {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  static constexpr T value = TYPE-ORDER(T, U);</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  static constexpr strong_ordering value = TYPE-ORDER(T, U);</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  using value_type = T;</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  using value_type = strong_ordering;</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  constexpr operator value_type() const noexcept { return value; }</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  constexpr value_type operator()() const noexcept { return value; }</span>

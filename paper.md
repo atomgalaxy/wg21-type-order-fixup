@@ -95,9 +95,9 @@ with
 >
 >   ```cpp
 >   template<class T, class U> struct type_order {
->     static constexpr T value = TYPE-ORDER(T, U);
+>     static constexpr strong_ordering value = TYPE-ORDER(T, U);
 >
->     using value_type = T;
+>     using value_type = strong_ordering;
 >
 >     constexpr operator value_type() const noexcept { return value; }
 >     constexpr value_type operator()() const noexcept { return value; }
