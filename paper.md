@@ -1,6 +1,6 @@
 ---
 title: Fix for `type_order` template definition
-document: D3778R0
+document: P3778R0
 date: today
 audience: LEWG, LWG
 author:
