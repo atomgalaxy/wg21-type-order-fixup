@@ -153,7 +153,8 @@ Note that it has `type`.
 
 The author would like to thank the following people for their contributions:
 
-- Jonathan Wakely for raising the alarm about this, and implementing it in GCC
+- Jakub Jelinek for implementing it in GCC and raising the alarm
+- Jonathan Wakely for making sure I heard the alarm and explaining what it's about
 - Barry Revzin for spelling out the obvious design above.
 - Tim Song for pointing out the reason the `type` member is in `integral_constant` and that including it does us a disservice.
 - Bronek Kozicki for wrangling the design space and discussion
